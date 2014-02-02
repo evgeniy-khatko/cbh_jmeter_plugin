@@ -6,6 +6,7 @@
 	<property name="dist"  location="dist"/>
 	<property name="jmeter.lib" value="/opt/apache-jmeter-2.6/lib/"/>
 	<property name="jmeter.lib.ext" value="/opt/apache-jmeter-2.6/lib/ext"/>
+	<property name="lib" value="lib"/>
 	
 	<path id="classpath">
 		<fileset dir="${jmeter.lib}">
@@ -13,6 +14,9 @@
     </fileset>     
     <fileset dir="${jmeter.lib.ext}">
         <include name="ApacheJMeter_*.jar"/>
+    </fileset> 
+    <fileset dir="${lib}">
+        <include name="*.jar"/>
     </fileset> 
 	</path>
 	
