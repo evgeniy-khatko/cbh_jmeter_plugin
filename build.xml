@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<!-- Configuration of the Ant build system to generate a Jar file --> 
+<project name="GoogleBatchCreator" default="cp">
+	<property name="src" location="src"/>
+	<property name="build" location="build"/>
+	<property name="dist"  location="dist"/>
+	<property name="jmeter.lib" value="/opt/apache-jmeter-2.6/lib/"/>
+	<property name="jmeter.lib.ext" value="/opt/apache-jmeter-2.6/lib/ext"/>
+	
+	<path id="classpath">
+		<fileset dir="${jmeter.lib}">
+        <include name="*.jar"/>
+    </fileset>     
+    <fileset dir="${jmeter.lib.ext}">
+        <include name="ApacheJMeter_*.jar"/>
+    </fileset> 
+	</path>
+	
+  <target name="dist" depends="compile" description="generate the distribution" >
+    <mkdir dir="${dist}/lib"/>
+    <jar jarfile="${dist}/lib/GoogleBatchCreator.jar" basedir="${build}"/>
+  </target>
+
+  <target name="cp" depends="dist" description="copy to jmeter" >
+  	<copy file="${dist}/lib/GoogleBatchCreator.jar" todir="${jmeter.lib.ext}"/>
+  </target>
+	
+	<target name="init">
+    <tstamp/>
+    <mkdir dir="${build}"/>
+	</target>
+	
+	<target name="compile" depends="init" description="compile the source " >
+    <javac srcdir="${src}" destdir="${build}" includeantruntime="false">
+      <classpath refid="classpath"/>
+    </javac>
+	</target>
+	
+	<target name="clean" description="clean up" >
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+	</target>
+
+</project>
