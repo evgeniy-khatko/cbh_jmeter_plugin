@@ -47,11 +47,11 @@ import com.jcraft.jsch.SftpException;
 
 public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Serializable {
     private static final Logger LOG = LoggingManager.getLoggerForClass();
-    private static final String DEFAULT_USER = "user";
+    private static final String DEFAULT_USER = "login";
     private static final String DEFAULT_SERVER = "host";
     private static final int DEFAULT_PORT = 22;
-    private static final String DEFAULT_PASSWORD = "";
-    private static final String DEFAULT_LOCATION = "/path/to/remote/dir";
+    private static final String DEFAULT_PASSWORD = "pwd";
+    private static final String DEFAULT_LOCATION = "/";
     private static final int DEFAULT_PERIOD = 3600;
     private static final int DEFAULT_SIZE = 1000;
     private static final long serialVersionUID = 240L;
@@ -65,7 +65,7 @@ public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Ser
 
     // The name of the sampler
     private String name;
-    private static long start = 0;
+    private long start = 0;
     private long period;
     private int size;
     
@@ -128,8 +128,7 @@ public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Ser
            results.setStopTestNow(true);
           }
           if((System.currentTimeMillis() - start) > period*1000){
-            String path = createBatchFile(correlations, context.getParameter("Billing agreement"), distribution);
-            /*
+            String path = createBatchFile(correlations, context.getParameter("Billing agreement"), distribution);            
             sendBatchFile(
                 path, 
                 context.getParameter("Username"),
@@ -137,8 +136,7 @@ public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Ser
                 context.getIntParameter("Port"),
                 context.getParameter("Password"),
                 context.getParameter("Remote location")
-                );
-            */
+                );            
             correlations.clear();
             start = System.currentTimeMillis();
             results.setResponseMessage("processed: " + path);
@@ -153,12 +151,13 @@ public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Ser
            LOG.error("GoogleBatch: file creation failure.");
            results.setSuccessful(false);
            results.setResponseMessage(e.toString());
-           results.setStopTestNow(true);
+           results.setStopTestNow(true);   
         /*
         }catch (InterruptedException e) {
            LOG.warn("GoogleBatch: interrupted.");
            results.setSuccessful(true);
            results.setResponseMessage(e.toString());
+        */
         }catch (JSchException e){
            correlations.clear();
            LOG.error("GoogleBatch: ssh connection failure.");
@@ -169,8 +168,7 @@ public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Ser
            correlations.clear();
            LOG.error("GoogleBatch: scp failure.");
            results.setSuccessful(false);
-           results.setResponseMessage(e.toString());
-        */
+           results.setResponseMessage(e.toString());        
         }catch (Exception e) {
            LOG.error("SleepTest: error during sample", e);
            results.setSuccessful(false);
