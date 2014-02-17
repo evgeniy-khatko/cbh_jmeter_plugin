@@ -18,6 +18,7 @@
 package ekhatko;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
@@ -47,16 +48,16 @@ import com.jcraft.jsch.SftpException;
 
 public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Serializable {
     private static final Logger LOG = LoggingManager.getLoggerForClass();
-    private static final String DEFAULT_USER = "login";
+    private static final String DEFAULT_USER = "user";
     private static final String DEFAULT_SERVER = "host";
     private static final int DEFAULT_PORT = 22;
     private static final String DEFAULT_PASSWORD = "pwd";
-    private static final String DEFAULT_LOCATION = "/";
-    private static final int DEFAULT_PERIOD = 3600;
-    private static final int DEFAULT_SIZE = 1000;
+    private static final String DEFAULT_LOCATION = "/tmp";
+    private static final int DEFAULT_PERIOD = 10;
+    private static final int DEFAULT_SIZE = 10;
     private static final long serialVersionUID = 240L;
     private static final String FILEPATH = System.getProperty("java.io.tmpdir");
-    private static final String DEFAULT_BA = "DCB";
+    private static final String DEFAULT_BA = "MOCK_RU_DCB";
     private static final String DEFAULT_DISTR = "CHARGE=80, CANCEL=15, REFUND=5";
     private Map<Integer, String> distribution = new TreeMap<Integer,String>();
     private boolean badParams;
@@ -225,7 +226,7 @@ public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Ser
       }
       // create file
       SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss"); 
-      String filename = FILEPATH + "request_" + formatter.format(new Date()) + ".csv";
+      String filename = FILEPATH + File.separator +"request_" + formatter.format(new Date()) + ".csv";
       // Time.now.strftime("%Y%m%d%H%M%S")+'.csv'
       BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
       bw.write(body.toString());
