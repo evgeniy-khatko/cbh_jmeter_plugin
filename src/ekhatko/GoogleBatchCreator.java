@@ -193,11 +193,10 @@ public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Ser
       // "REQUESTFILE,#{Time.now.to_i},#{@file_id},#{@values['BA']}\n"
       String curTime = String.valueOf((System.currentTimeMillis() / 1000L));
       StringBuilder body = new StringBuilder(
-          "REQUESTFILE," + curTime
-          + "," + String.valueOf(new Random().nextInt(10000000))
+          "REQUESTFILE"
+          + "," + String.valueOf(curTime)
           + "," + String.valueOf(new Random().nextInt(10000000))
           + "," + billingAgreement
-          + ","
           + "\n"
           );
       // "#{type},#{Time.now.to_i},#{cor},#{@values['BA']}\n"
