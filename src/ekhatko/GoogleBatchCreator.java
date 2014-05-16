@@ -17,20 +17,7 @@
  */
 package ekhatko;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
-import java.util.Stack;
-import java.util.TreeMap;
-
+import com.jcraft.jsch.*;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
@@ -39,12 +26,10 @@ import org.apache.jmeter.testelement.TestElement;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Random;
 
 public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Serializable {
     private static final Logger LOG = LoggingManager.getLoggerForClass();
@@ -206,10 +191,13 @@ public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Ser
 
     private String createBatchFile(Stack<String> cors, String billingAgreement, Map<Integer,String> distribution) throws IOException{
       // "REQUESTFILE,#{Time.now.to_i},#{@file_id},#{@values['BA']}\n"
+      String curTime = String.valueOf((System.currentTimeMillis() / 1000L));
       StringBuilder body = new StringBuilder(
-          "REQUESTFILE,"+String.valueOf((System.currentTimeMillis() / 1000L))
+          "REQUESTFILE," + curTime
+          + "," + String.valueOf(new Random().nextInt(10000000))
           + "," + String.valueOf(new Random().nextInt(10000000))
           + "," + billingAgreement
+          + ","
           + "\n"
           );
       // "#{type},#{Time.now.to_i},#{cor},#{@values['BA']}\n"
@@ -219,6 +207,7 @@ public class GoogleBatchCreator extends AbstractJavaSamplerClient implements Ser
         String c = cors.pop();
         body.append(
             getType(rand, distribution)
+            + "," + curTime
             + "," + c
             + "," + billingAgreement
             + "\n"
